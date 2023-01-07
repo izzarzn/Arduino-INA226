@@ -49,7 +49,7 @@ bool INA226::configure(ina226_averages_t avg, ina226_busConvTime_t busConvTime, 
     return true;
 }
 
-bool INA226::calibrate(float rShunt, float iMaxExpected){ // MODIFIED by GCAR
+bool INA226::calibrate(float rShunt, float iMaxExpected){ // MODIFIED by izzarzn
     uint16_t calibrationValue;
     float iMaxPossible;
     iMaxPossible = vShuntMax / rShunt;
@@ -214,9 +214,8 @@ void INA226::setBusVoltageLimit(float voltage)
     writeRegister16(INA226_REG_ALERTLIMIT, value);
 }
 
-void INA226::setShuntVoltageLimit(float voltage)
-{
-    uint16_t value = voltage * 25000;
+void INA226::setShuntVoltageLimit(float voltage){ //Modified by izzarzn
+    uint16_t value = voltage/2.5e-6;
     writeRegister16(INA226_REG_ALERTLIMIT, value);
 }
 
