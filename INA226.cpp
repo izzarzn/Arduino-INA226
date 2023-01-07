@@ -49,29 +49,14 @@ bool INA226::configure(ina226_averages_t avg, ina226_busConvTime_t busConvTime, 
     return true;
 }
 
-bool INA226::calibrate(float rShuntValue, float iMaxExpected)
-{
+bool INA226::calibrate(float rShunt, float iMaxExpected){ // MODIFIED by GCAR
     uint16_t calibrationValue;
-    rShunt = rShuntValue;
-
-    float iMaxPossible, minimumLSB;
-
+    float iMaxPossible;
     iMaxPossible = vShuntMax / rShunt;
-
-    minimumLSB = iMaxExpected / 32767;
-
-    currentLSB = (uint16_t)(minimumLSB * 100000000);
-    currentLSB /= 100000000;
-    currentLSB /= 0.0001;
-    currentLSB = ceil(currentLSB);
-    currentLSB *= 0.0001;
-
-    powerLSB = currentLSB * 25;
-
+    currentLSB = iMaxExpected / 32768;// calculate current resolution
+    powerLSB = currentLSB * 25;// power resolution
     calibrationValue = (uint16_t)((0.00512) / (currentLSB * rShunt));
-
     writeRegister16(INA226_REG_CALIBRATION, calibrationValue);
-
     return true;
 }
 
